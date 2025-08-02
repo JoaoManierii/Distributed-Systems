@@ -3,6 +3,8 @@
 #include <string.h>
 #include <math.h>
 #include <netinet/in.h>
+#include <unistd.h> 
+#include <asm-generic/socket.h>
 #define PORT 8080
 
 double calculate(char operation, double operand);
@@ -41,6 +43,8 @@ int main()
         perror("listen");
         exit(EXIT_FAILURE);
     }
+
+    printf("Server is listening on port %d\n", PORT);
 
     if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen)) < 0)
     {
