@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <netinet/in.h>
+#include <unistd.h>
 #define PORT 8080
 
 double calculate(char operation, double operand);

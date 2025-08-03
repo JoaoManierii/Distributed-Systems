@@ -3,6 +3,7 @@
 #include <string.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 #define PORT 8080
 
 int main() {
@@ -20,8 +21,7 @@ int main() {
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(PORT);
 
-    // ATENÇÃO: Substitua esse IP pelo IP real da VM do servidor
-    if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr) <= 0) {
+    if(inet_pton(AF_INET, "192.168.100.36", &serv_addr.sin_addr) <= 0) {
         printf("\nInvalid address/ Address not supported \n");
         return -1;
     }
@@ -33,7 +33,7 @@ int main() {
 
     while(1){
         printf("\n\nEnter operation and operand: ");
-        scanf(" %c %lf", &operation, &operand);  // note o espaço antes de %c
+        scanf(" %c %lf", &operation, &operand);
         sprintf(buffer, "%c %lf", operation, operand);
         send(sock, buffer, strlen(buffer), 0);
         printf("Request sent\n");
