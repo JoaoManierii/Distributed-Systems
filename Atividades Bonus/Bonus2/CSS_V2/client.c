@@ -21,7 +21,8 @@ void* handle_request(void* args_void) {
     char buffer[1024] = {0};
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        printf("Socket creation error\n");
+        perror("Socket creation error");
+        free(args);
         pthread_exit(NULL);
     }
 
@@ -29,12 +30,16 @@ void* handle_request(void* args_void) {
     serv_addr.sin_port = htons(PORT);
 
     if (inet_pton(AF_INET, "192.168.100.36", &serv_addr.sin_addr) <= 0) {
-        printf("Invalid address\n");
+        perror("Invalid address");
+        close(sock);
+        free(args);
         pthread_exit(NULL);
     }
 
     if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
-        printf("Connection failed\n");
+        perror("Connection failed");
+        close(sock);
+        free(args);
         pthread_exit(NULL);
     }
 
@@ -50,14 +55,14 @@ void* handle_request(void* args_void) {
 }
 
 int main() {
-    double op1, op2;
-    char operation;
-
     while (1) {
+        double op1, op2;
+        char operation;
+
         printf("\nEnter: num1 op num2 (e.g. 5 + 5): ");
         if (scanf("%lf %c %lf", &op1, &operation, &op2) != 3) {
             printf("Invalid input. Try again.\n");
-            while(getchar() != '\n'); // flush stdin
+            while (getchar() != '\n'); // limpa buffer
             continue;
         }
 
@@ -67,8 +72,12 @@ int main() {
         args->operation = operation;
 
         pthread_t tid;
-        pthread_create(&tid, NULL, handle_request, args);
-        pthread_detach(tid); // libera a thread automaticamente
+        if (pthread_create(&tid, NULL, handle_request, args) != 0) {
+            perror("Failed to create thread");
+            free(args);
+        } else {
+            pthread_detach(tid); // auto-limpeza
+        }
     }
 
     return 0;

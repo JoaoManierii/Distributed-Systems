@@ -33,27 +33,37 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    if (listen(server_fd, 3) < 0) {
+    if (listen(server_fd, 5) < 0) {
         perror("listen");
         exit(EXIT_FAILURE);
     }
 
-    if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0) {
-        perror("accept");
-        exit(EXIT_FAILURE);
-    }
+    printf("Server listening on port %d...\n", PORT);
 
-    char buffer[1024] = {0};
-    double op1, op2;
-    char operation;
+    while (1) {
+        new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+        if (new_socket < 0) {
+            perror("accept");
+            continue;
+        }
 
-    while(1) {
-        read(new_socket, buffer, 1024);
-        sscanf(buffer, "%lf %c %lf", &op1, &operation, &op2);
-        double result = calculate(operation, op1, op2);
-        sprintf(buffer, "%lf", result);
-        send(new_socket, buffer, strlen(buffer), 0);
-        memset(buffer, 0, sizeof(buffer));
+        printf("Client connected.\n");
+
+        char buffer[1024] = {0};
+        double op1, op2;
+        char operation;
+
+        int bytes_read;
+        while ((bytes_read = read(new_socket, buffer, 1024)) > 0) {
+            sscanf(buffer, "%lf %c %lf", &op1, &operation, &op2);
+            double result = calculate(operation, op1, op2);
+            sprintf(buffer, "%lf", result);
+            send(new_socket, buffer, strlen(buffer), 0);
+            memset(buffer, 0, sizeof(buffer));
+        }
+
+        printf("Client disconnected.\n");
+        close(new_socket);
     }
 
     return 0;
@@ -62,20 +72,11 @@ int main() {
 double calculate(char operation, double op1, double op2) {
     double result = 0;
     switch(operation) {
-        case '+':
-            result = op1 + op2;
-            break;
-        case '-':
-            result = op1 - op2;
-            break;
-        case '*':
-            result = op1 * op2;
-            break;
-        case '/':
-            result = op2 != 0 ? op1 / op2 : 0;
-            break;
-        default:
-            printf("Invalid operation\n");
+        case '+': result = op1 + op2; break;
+        case '-': result = op1 - op2; break;
+        case '*': result = op1 * op2; break;
+        case '/': result = (op2 != 0) ? op1 / op2 : 0; break;
+        default: printf("Invalid operation\n");
     }
     return result;
 }
