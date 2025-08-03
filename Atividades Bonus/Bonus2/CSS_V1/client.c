@@ -11,7 +11,7 @@ int main() {
     struct sockaddr_in serv_addr;
     char buffer[1024] = {0};
     char operation;
-    double operand;
+    double op1, op2;
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Socket creation error \n");
@@ -32,9 +32,9 @@ int main() {
     }
 
     while(1){
-        printf("\n\nEnter operation and operand: ");
-        scanf(" %c %lf", &operation, &operand);
-        sprintf(buffer, "%c %lf", operation, operand);
+        printf("\n\nEnter: num1 op num2 (e.g. 5 + 5): ");
+        scanf("%lf %c %lf", &op1, &operation, &op2);
+        sprintf(buffer, "%lf %c %lf", op1, operation, op2);
         send(sock, buffer, strlen(buffer), 0);
         printf("Request sent\n");
         memset(buffer, 0, sizeof(buffer));

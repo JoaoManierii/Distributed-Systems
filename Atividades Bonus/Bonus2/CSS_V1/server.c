@@ -6,7 +6,7 @@
 #include <unistd.h>
 #define PORT 8080
 
-double calculate(char operation, double operand);
+double calculate(char operation, double op1, double op2);
 
 int main() {
     int server_fd, new_socket;
@@ -44,13 +44,13 @@ int main() {
     }
 
     char buffer[1024] = {0};
-    double operand;
+    double op1, op2;
     char operation;
 
     while(1) {
         read(new_socket, buffer, 1024);
-        sscanf(buffer, "%c %lf", &operation, &operand);
-        double result = calculate(operation, operand);
+        sscanf(buffer, "%lf %c %lf", &op1, &operation, &op2);
+        double result = calculate(operation, op1, op2);
         sprintf(buffer, "%lf", result);
         send(new_socket, buffer, strlen(buffer), 0);
         memset(buffer, 0, sizeof(buffer));
@@ -59,26 +59,20 @@ int main() {
     return 0;
 }
 
-double calculate(char operation, double operand) {
+double calculate(char operation, double op1, double op2) {
     double result = 0;
     switch(operation) {
         case '+':
-            result = operand + operand;
+            result = op1 + op2;
+            break;
+        case '-':
+            result = op1 - op2;
             break;
         case '*':
-            result = operand * operand;
+            result = op1 * op2;
             break;
-        case 's':
-            result = sqrt(operand);
-            break;
-        case '^':
-            result = exp(operand);
-            break;
-        case '!':
-            result = 1;
-            for(int i = 1; i <= operand; i++) {
-                result *= i;
-            }
+        case '/':
+            result = op2 != 0 ? op1 / op2 : 0;
             break;
         default:
             printf("Invalid operation\n");
