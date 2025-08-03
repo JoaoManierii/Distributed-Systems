@@ -20,7 +20,7 @@ int main() {
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(PORT);
 
-    // Convert IPv4 and IPv6 addresses from text to binary form
+    // ATENÇÃO: Substitua esse IP pelo IP real da VM do servidor
     if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr) <= 0) {
         printf("\nInvalid address/ Address not supported \n");
         return -1;
@@ -31,9 +31,9 @@ int main() {
         return -1;
     }
 
-    while(1) {
+    while(1){
         printf("\n\nEnter operation and operand: ");
-        scanf("%c %lf", &operation, &operand);
+        scanf(" %c %lf", &operation, &operand);  // note o espaço antes de %c
         sprintf(buffer, "%c %lf", operation, operand);
         send(sock, buffer, strlen(buffer), 0);
         printf("Request sent\n");
