@@ -12,7 +12,11 @@ typedef struct {
     double op1;
     double op2;
     char operation;
+    int thread_id;
 } CalcArgs;
+
+int thread_counter = 1;
+pthread_mutex_t counter_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void* handle_request(void* args_void) {
     CalcArgs* args = (CalcArgs*)args_void;
@@ -21,7 +25,7 @@ void* handle_request(void* args_void) {
     char buffer[1024] = {0};
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("Socket creation error");
+        perror("[ERROR] Socket creation error");
         free(args);
         pthread_exit(NULL);
     }
@@ -30,14 +34,14 @@ void* handle_request(void* args_void) {
     serv_addr.sin_port = htons(PORT);
 
     if (inet_pton(AF_INET, "192.168.100.36", &serv_addr.sin_addr) <= 0) {
-        perror("Invalid address");
+        perror("[ERROR] Invalid address");
         close(sock);
         free(args);
         pthread_exit(NULL);
     }
 
     if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
-        perror("Connection failed");
+        perror("[ERROR] Connection failed");
         close(sock);
         free(args);
         pthread_exit(NULL);
@@ -47,7 +51,9 @@ void* handle_request(void* args_void) {
     send(sock, buffer, strlen(buffer), 0);
     memset(buffer, 0, sizeof(buffer));
     read(sock, buffer, 1024);
-    printf("Result for %.2lf %c %.2lf = %s\n", args->op1, args->operation, args->op2, buffer);
+
+    printf("[Thread %d] Result for %.2lf %c %.2lf = %s\n", args->thread_id, args->op1, args->operation, args->op2, buffer);
+    printf("Ready for next operation...\n");
 
     close(sock);
     free(args);
@@ -71,12 +77,16 @@ int main() {
         args->op2 = op2;
         args->operation = operation;
 
+        pthread_mutex_lock(&counter_mutex);
+        args->thread_id = thread_counter++;
+        pthread_mutex_unlock(&counter_mutex);
+
         pthread_t tid;
         if (pthread_create(&tid, NULL, handle_request, args) != 0) {
             perror("Failed to create thread");
             free(args);
         } else {
-            pthread_detach(tid); // auto-limpeza
+            pthread_detach(tid);
         }
     }
 
