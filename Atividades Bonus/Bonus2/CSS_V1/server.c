@@ -3,16 +3,19 @@
 #include <string.h>
 #include <math.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <unistd.h>
+
 #define PORT 8080
 
 double calculate(char operation, double op1, double op2);
 
 int main() {
     int server_fd, new_socket;
-    struct sockaddr_in address;
+    struct sockaddr_in address, client_addr;
     int opt = 1;
-    int addrlen = sizeof(address);
+    socklen_t addrlen = sizeof(address);
+    socklen_t client_len = sizeof(client_addr);
 
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
         perror("socket failed");
@@ -38,17 +41,26 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0) {
+    if ((new_socket = accept(server_fd, (struct sockaddr *)&client_addr, &client_len)) < 0) {
         perror("accept");
         exit(EXIT_FAILURE);
     }
+
+    // Print da conexão
+    char client_ip[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &(client_addr.sin_addr), client_ip, INET_ADDRSTRLEN);
+    printf("[SERVER] New client connected: %s:%d\n", client_ip, ntohs(client_addr.sin_port));
 
     char buffer[1024] = {0};
     double op1, op2;
     char operation;
 
     while(1) {
-        read(new_socket, buffer, 1024);
+        int bytes_read = read(new_socket, buffer, 1024);
+        if (bytes_read <= 0) {
+            break; // desconectou
+        }
+
         sscanf(buffer, "%lf %c %lf", &op1, &operation, &op2);
         double result = calculate(operation, op1, op2);
         sprintf(buffer, "%lf", result);
@@ -72,10 +84,11 @@ double calculate(char operation, double op1, double op2) {
             result = op1 * op2;
             break;
         case '/':
-            result = op2 != 0 ? op1 / op2 : 0;
+            result = (op2 != 0) ? op1 / op2 : 0;
             break;
         default:
-            printf("Invalid operation\n");
+            // operação inválida ignorada silenciosamente
+            break;
     }
     return result;
 }
