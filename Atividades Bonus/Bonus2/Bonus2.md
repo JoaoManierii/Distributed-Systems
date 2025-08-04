@@ -7,7 +7,7 @@
 
 ---
 
-## 📌 Objetivo da Atividade
+## Objetivo da Atividade
 
 Implementar uma aplicação Cliente-Servidor em C usando a interface de sockets TCP/IP, simulando o funcionamento de uma calculadora distribuída. A aplicação foi desenvolvida em quatro versões:
 
@@ -18,7 +18,7 @@ Implementar uma aplicação Cliente-Servidor em C usando a interface de sockets 
 
 ---
 
-## ⚙️ Ambiente de Execução
+## Ambiente de Execução
 
 Para atender à exigência da atividade (cliente e servidor em máquinas diferentes), foi montado o seguinte ambiente de testes:
 
@@ -46,7 +46,7 @@ gcc server.c -o server -lpthread
 
 ---
 
-## 🧱 Estrutura de Pastas
+## Estrutura de Pastas
 
 ```bash
 Distributed-Systems/
@@ -65,7 +65,7 @@ Cada pasta contém dois arquivos:
 
 ---
 
-## 🧪 Etapas, Testes e Dificuldades
+## Etapas, Testes e Dificuldades
 
 Durante o processo de desenvolvimento e testes, as seguintes etapas e obstáculos foram enfrentados:
 
@@ -81,7 +81,7 @@ Durante o processo de desenvolvimento e testes, as seguintes etapas e obstáculo
 
 ---
 
-### 🔧 CCS v1 – Cliente e Servidor Singlethreaded
+### CCS v1 – Cliente e Servidor Singlethreaded
 
 
 - **Cliente**:
@@ -104,7 +104,7 @@ Durante o processo de desenvolvimento e testes, as seguintes etapas e obstáculo
 
 ---
 
-### 🔧 CCS v2 – Cliente Multithreaded, Servidor Singlethreaded
+### CCS v2 – Cliente Multithreaded, Servidor Singlethreaded
 
 - **Cliente**:
 <div align="center"><img src="images/V2client.png" alt="CSS v2 client" width="600" height="300" /></div>
@@ -125,7 +125,7 @@ Durante o processo de desenvolvimento e testes, as seguintes etapas e obstáculo
 
 ---
 
-### 🔧 CCS v3 – Cliente e Servidor Multithreaded
+### CCS v3 – Cliente e Servidor Multithreaded
 
 - **Cliente**:
 <div align="center"><img src="images/V3client.png" alt="CSS v3 client" width="600" height="300" /></div>
@@ -143,7 +143,7 @@ Durante o processo de desenvolvimento e testes, as seguintes etapas e obstáculo
 
 ---
 
-### 🔧 CCS v4 – Cliente Multithreaded, Servidor Singlethreaded com FSM
+### CCS v4 – Cliente Multithreaded, Servidor Singlethreaded com FSM
 
 - **Cliente**:
 <div align="center"><img src="images/V4client.png" alt="CSS v4 client" width="600" height="300" /></div>
@@ -162,7 +162,7 @@ Durante o processo de desenvolvimento e testes, as seguintes etapas e obstáculo
 ---
 
 
-## 📦 Repositório do Código
+## Repositório do Código
 
 O código-fonte de todas as versões se encontra no repositório GitHub:
 
@@ -170,7 +170,7 @@ O código-fonte de todas as versões se encontra no repositório GitHub:
 
 ---
 
-## ✅ Conclusão
+## Conclusão
 
 A atividade proporcionou uma excelente oportunidade para revisar conceitos de comunicação entre processos (IPC) em rede, incluindo:
 
