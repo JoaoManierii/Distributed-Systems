@@ -31,6 +31,19 @@ Para atender à exigência da atividade (cliente e servidor em máquinas diferen
   - Código-fonte `client.c` igualmente organizado por versão.
   - IP da VM referenciado diretamente no código do cliente com `inet_pton`.
 
+- **flags de compilação**
+- versao sem multithread:
+```
+gcc server.c -o server -lm
+gcc client.c -o client
+```
+- versao multithreaded:
+```
+gcc client.c -o client -lpthread
+gcc server.c -o server -lpthread
+```
+
+
 ---
 
 ## 🧱 Estrutura de Pastas
