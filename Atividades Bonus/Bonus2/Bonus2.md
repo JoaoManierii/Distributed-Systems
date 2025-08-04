@@ -181,3 +181,5 @@ A atividade proporcionou uma excelente oportunidade para revisar conceitos de co
 - Estrutura de FSM para controle de conexões em servidor singlethreaded.
 
 Apesar dos desafios iniciais, o ambiente foi corretamente configurado e todas as versões foram implementadas com sucesso, funcionando conforme os requisitos propostos.
+
+OBS: Fiz o relatorio em Markdown, quando utilizei uma extensao do VS code para transformar em PDF ele coloca essa data que esta errada (provavelmente do fuso de onde a extensao esta) por isso a data do dia 04, mas se o sr. olhar no teams vera que entreguei corretamente 
